@@ -27,7 +27,7 @@ set(META_PROJECT_DESCRIPTION "Record LabStreamingLayer streams to XDF data file.
 set(CMAKE_CXX_STANDARD 14)
 set(CMAKE_CXX_STANDARD_REQUIRED On)
 
-find_package(Qt5 REQUIRED COMPONENTS Widgets)
+find_package(Qt5 REQUIRED COMPONENTS Widgets Network)
 
 find_package(Threads REQUIRED)
 
@@ -39,6 +39,8 @@ add_executable(${PROJECT_NAME} MACOSX_BUNDLE #WIN32
 	recording.h
 	recording.cpp
 	conversions.h
+	tcpinterface.h
+	tcpinterface.cpp
 	xdfwriter.h
 	xdfwriter.cpp
 )
@@ -60,6 +62,7 @@ add_executable(testxdfwriter
 target_link_libraries(${PROJECT_NAME}
 	PRIVATE
 	Qt5::Widgets
+	Qt5::Network
 	Threads::Threads
 	LSL::lsl
 )

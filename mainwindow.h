@@ -15,6 +15,7 @@
 #include <lsl_cpp.h>
 
 class recording;
+class RemoteControlSocket;
 
 class RecorderItem {
 
@@ -40,11 +41,13 @@ private slots:
 	void stopRecording(void);
 	void selectAllStreams();
 	void selectNoStreams();
+	void toggleRcs();
 
 private:
 	QSet<QString> getCheckedStreams() const;
 
 	std::unique_ptr<recording> currentRecording;
+	std::unique_ptr<RemoteControlSocket> rcs;
 
 	int startTime;
 	std::unique_ptr<QTimer> timer;

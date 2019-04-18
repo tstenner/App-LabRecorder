@@ -52,6 +52,10 @@ public:
 	void write_data_chunk_nested(streamid_t streamid, const std::vector<double> &timestamps,
 		const std::vector<std::vector<T>> &chunk);
 
+	template <typename T>
+	void write_better_data_chunk(streamid_t streamid, const std::vector<double> &timestamps,
+		const T *chunk, uint32_t n_samples);
+
 	/**
 	 * Write the stream header and add the stream header to the file
 	 * @brief write_stream_header Write the stream header, see also
@@ -155,12 +159,16 @@ void XDFWriter::write_data_chunk_nested(streamid_t streamid, const std::vector<d
 
 template <typename T>
 void XDFWriter::write_better_data_chunk(streamid_t streamid, const std::vector<double> &timestamps,
-	const T *chunk, uint32_t n_samples, uint32_t n_channels) {
+	const T *chunk, uint32_t n_samples) {
 	/**
 	  Samples data chunk: [Tag 7] [VLA ChunkLen] [StreamID] [uint32 NumSamples]
 	  [Timestamps, double]
 	  [NumSamples x NumChannels Sample]
 	  */
+	auto streamit = streams.find(streamid);
+	if(streamit==streams.end()) throw std::runtime_error("...");
+	auto& stream = streamit->second;
+	auto n_channels = stream.nchannels;
 	if (n_samples == 0) return;
 	if (timestamps.size() != n_samples)
 		throw std::runtime_error("timestamp / sample count mismatch");
